@@ -1,16 +1,45 @@
-# This is a sample Python script.
+import math
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+class Flow:
+    def __init__(self,density,velocity,a_0):
+
+        self.density = density
+        self.velocity = velocity
+        self.a_0 = a_0
+        self.M_x = velocity/a_0
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, rbuhhghghj')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+class Propeller:
+    def __init__(self,flow,RPM,bladeNumber,diameter,x):
+        self.RPM = RPM
+        self.flow = flow
+        self.bladeNumber = bladeNumber
+        self.diameter = diameter
+        self.x = x
+        self.theta = #whatever
+        self.M_t = propeller.RPM * 2 * math.pi / 60 * diameter / 2
+        self.bladePassingFrequency = (RPM/60)*bladeNumber
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    def M_r(self,z):
+        return math.sqrt((self.flow.M_x ** 2) + (z ** 2 * self.M_t ** 2))
+
+    def k_x(self):
+        return 0
+
+    def k_y(self):
+        return 0
+
+    def psi_V(self):
+        return 0
+
+    def psi_D(self):
+        return 0
+
+    def psi_L(self):
+        return 0
+
+flow = Flow()
+
+propeller = Propeller()
