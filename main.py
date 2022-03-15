@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 class Flow:
     def __init__(self,density,velocity,a_0):
@@ -16,13 +17,13 @@ class Pressure:
         self.P_Lm = P_Lm
 
 class Propeller:
-    def __init__(self,flow,RPM,bladeNumber,diameter,x):
+    def __init__(self,flow,RPM,bladeNumber,diameter,x,theta,y):
         self.RPM = RPM
         self.flow = flow
         self.bladeNumber = bladeNumber
         self.diameter = diameter
         self.x = x
-        self.theta = #whatever
+        self.theta = theta
         self.M_t = propeller.RPM * 2 * math.pi / 60 * diameter / 2
         self.bladePassingFrequency = (RPM/60)*bladeNumber
         self.y = y
