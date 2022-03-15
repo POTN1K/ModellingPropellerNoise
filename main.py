@@ -59,8 +59,9 @@ class Propeller:
         k_x = 2*self.bladeNumber*m*self.B_D(z)*self.M_t/(self.M_r(z)*(1-self.flow.M_x*math.cos(self.theta)))
         return k_x
 
-    def k_y(self):
-        return 0
+    def k_y(self,z, m):
+        return (2 * self.bladeNumber * m * self.B_D(z) * (self.flow.M_x - self.M_r(z) ** (2) * np.cos(self.theta))) / (z * self.M_r(z) * (1 - self.flow.M_x * math.cos(self.theta)))
+
 
 
     #The psi's
@@ -170,3 +171,4 @@ class Math2:
 flow = Flow()
 math2 = Math2
 propeller = Propeller()
+
