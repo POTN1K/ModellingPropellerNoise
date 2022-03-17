@@ -53,7 +53,7 @@ class Propeller:
     #calculate the first constant in the large formula
     def calcFirstPart(self,m):
         omega = (self.RPM/60)*2*math.pi
-        return -(self.flow.)/()
+        return -(self.flow)/()
 
     #k_x and k_y
     def k_x(self, z, m):
