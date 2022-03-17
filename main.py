@@ -154,7 +154,7 @@ class Math2:
     def integrateRiemannSums(self,func,a,b,steps,args=[],index=0):
         #integrate function using riemann sums
         h = (b - a) / steps
-        print(steps)
+        #print(steps)
         y = 0
         for i in range(0, steps + 1):
             x = a + i * h
