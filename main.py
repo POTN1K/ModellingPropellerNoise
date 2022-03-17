@@ -10,21 +10,16 @@ class Flow:
         self.M_x = velocity/a_0
 
 
-class Pressure:
-    def __init__(self,P_Vm,P_Dm,P_Lm):
-        self.P_Vm = P_Vm
-        self.P_Dm = P_Dm
-        self.P_Lm = P_Lm
-
 class Propeller:
     def __init__(self,flow,RPM,bladeNumber,diameter,x,theta,y):
         self.RPM = RPM
         self.flow = flow
         self.bladeNumber = bladeNumber
         self.diameter = diameter
+        self.radius = 0.5 * diameter
         self.x = x
         self.theta = theta
-        self.M_t = propeller.RPM * 2 * math.pi / 60 * diameter / 2
+        self.M_t = (self.RPM * 2 * math.pi / 60 * diameter / 2)/flow.a_0
         self.bladePassingFrequency = (RPM/60)*bladeNumber
         self.y = y
 
@@ -53,7 +48,7 @@ class Propeller:
     #calculate the first constant in the large formula
     def calcFirstPart(self,m):
         omega = (self.RPM/60)*2*math.pi
-        return -(self.flow.)/()
+        return -(self.flow.density * (self.flow.a_0**2) * self.bladeNumber * math.sin(self.theta) * np.exp(1j * m * self.bladeNumber * ( ( (omega*self.radius)/(self.flow.a_0) ) - (0.5*math.pi)) ) )/( 8 * math.pi * (self.y/self.diameter) * (1-self.flow.M_x*math.cos(self.theta)))
 
     #k_x and k_y
     def k_x(self, z, m):
@@ -70,12 +65,12 @@ class Propeller:
     def psi_D(self, step,z,m):
         z_arr = np.arange(-0.5, 0.5, step)
         derivativepsi_D = self.psi_D_derivative(z_arr, [z,m])
-        return Math2.integration(step, derivativepsi_V, 'Simpsons')
+        return math2.integration(step, derivativepsi_D, 1)
 
     def psi_L(self, step,z,m):
         z_arr = np.arange(-0.5, 0.5, step)
-        derivativepsi_L = self.psi_L_derivative(z_arr,[z,m]z)
-        return Math2.integration(step,derivativepsi_L,'Simpsons')
+        derivativepsi_L = self.psi_L_derivative(z_arr,[z,m])
+        return math2.integration(step,derivativepsi_L,1)
 
     def psi_V(self,step, z,m):
         z_arr = np.arange(-0.5, 0.5, step)
@@ -100,7 +95,7 @@ class Propeller:
         z = args[0]
         m = args[1]
         k_x = self.k_x(z, m)
-        Drag_sec = self.CDfunction(x) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(z)
+        Drag_sec = self.CDfunction(x+0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(z)
         return Drag_sec * np.exp(1j*k_x*x)
 
     def psi_L_derivative(self,x,args):
@@ -156,20 +151,23 @@ class Math2:
         J_x *= x**N
         return J_x
 
-    def integrateRiemannSums(func,a,b,steps,args=[]):
+    def integrateRiemannSums(self,func,a,b,steps,args=[],index=0):
         #integrate function using riemann sums
         h = (b - a) / steps
         print(steps)
         y = 0
         for i in range(0, steps + 1):
             x = a + i * h
-            y += func(x,args) * h
+            y += func(x,args)[index] * h
         return y
 
 #Questions to ask Ragni
 #1. propeller radius. Why does it start at 0.2?
 
-flow = Flow()
-math2 = Math2
-propeller = Propeller()
-
+math2 = Math2()
+#flow: density,velocity,a_0
+flow = Flow(1.225,8,343)
+#propeller: flow,RPM,bladeNumber,diameter,x,theta,y
+propeller = Propeller(flow,8000,2,0.3,0,math.pi/4,1.2)
+z=np.arange(0,np.pi,0.01)
+print(propeller.noise(1,0))
