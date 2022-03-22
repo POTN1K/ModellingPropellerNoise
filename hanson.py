@@ -69,19 +69,13 @@ class Propeller:
     #The psi's
      #method 1
     def psi_D(self, step,z,m):
-        z_arr = np.arange(-0.5, 0.5, step)
-        derivativepsi_D = self.psi_D_derivative(z_arr, [z,m])
-        return Math2.integration(step, derivativepsi_V, 'Simpsons')
+        return math2.integrateRiemannSums(self.psi_D_derivative, -0.5, 0.5, 100, [z, m])
 
     def psi_L(self, step,z,m):
-        z_arr = np.arange(-0.5, 0.5, step)
-        derivativepsi_L = self.psi_L_derivative(z_arr,[z,m]z)
-        return Math2.integration(step,derivativepsi_L,'Simpsons')
+        return math2.integrateRiemannSums(self.psi_L_derivative,-0.5,0.5,100,[z,m])
 
     def psi_V(self,step, z,m):
-        z_arr = np.arange(-0.5, 0.5, step)
-        derivativepsi_V = self.psi_V_derivative(z_arr, [z,m])
-        return Math2.integration(step, derivativepsi_V, 'Simpsons')
+        return math2.integrateRiemannSums(self.psi_V_derivative,-0.5,0.5,100,[z,m])
 
 
      #method 2
@@ -128,26 +122,35 @@ class Propeller:
         return 1
 
 class Math2:
-    def integration(self, step, array, type):
-        if type=='trapezium':
-            area=0
-            for i in range(len(array)-1):
-                area += (array[i]+ array[i+1])*step/2
+    def integration(func, a, b, steps,args=[], type):
+        h = (b - a) / steps
+        if type == 'trapezium':
+            area = 0
+            for i in range(0, steps + 1):
+                x = a + i * h
+                x2 = a + (i + 1) * h
+                area += (func(x, args) + func(x2, args)) * h / 2
             return area
-        if type== 'Simpsons':
-            area=0
-            if (len(array)/2)%1==0:
-                i=0
-                while i<=len(array)-3:
-                    area += step/3*(array[i]+4*array[i+1]+array[i+2])
-                    i = i+2
-                area += (array[-2]+array[-1])*step/2
+        if type == 'Simpsons':
+            area = 0
+            if ((steps + 1) / 2) % 1 == 0:
+                i = 0
+                while i <= steps - 3:
+                    x = a + i * h
+                    x2 = a + (i + 1) * h
+                    x3 = a + (i + 2) * h
+                    area += h / 3 * (func(x,args) + 4 * func(x2,args) + func(x3,args))
+                    i = i + 2
+                area += (func(a + steps * h,args) + func(a + (steps - 1) * h,args)) * h / 2
                 return area
             else:
-                i=0
-                while i<=len(array)-2:
-                    area += step/3*(array[i]+4*array[i+1]+array[i+2])
-                    i = i+2
+                i = 0
+                while i <= steps - 2:
+                    x = a + i * h
+                    x2 = a + (i + 1) * h
+                    x3 = a + (i + 2) * h
+                    area += h / 3 * (func(x) + 4 * func(x2,args) + func(x3,args))
+                    i = i + 2
                 return area
     def besselsFunc(self,N,x,M=10): #http://hyperphysics.phy-astr.gsu.edu/hbase/Math/bessel.html
         #standard bessels function
