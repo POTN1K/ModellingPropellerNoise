@@ -1,6 +1,7 @@
 import math
 import numpy as np
 
+
 class Flow:
     def __init__(self,density,velocity,a_0):
 
