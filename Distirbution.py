@@ -38,3 +38,18 @@ print(Thrust_rms)
 
 Torque_rms = np.sqrt(sum(df["Torque"] ** 2) / df["Torque"].size)
 print(Torque_rms)
+
+
+def cx(cl, cd, phi):
+    """Input phi in degrees, everything as numpy array"""
+    phi = phi * np.pi / 180
+    return cl * np.sin(phi) - cd * np.cos(phi)
+
+
+def cy(cl, cd, phi):
+    """Input phi in degrees, everything as numpy array"""
+    phi = phi * np.pi / 180
+    return cl * np.cos(phi) + cd * np.sin(phi)
+
+
+t = {{0.22, 43.6}, {0.27, 38}, {0.3, 35}, {0.39, 29}, {0.45, 25}, {0.5, 22.5}, {0.6, 19.5}, {0.7, 17}, {0.8, 14.5}, {0.9, 13}, {0.95, 12.3}, {1, 12}}
