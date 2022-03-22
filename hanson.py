@@ -121,11 +121,11 @@ class Propeller:
 
     def CLfunction(self,x):
 
-        return 0
+        return 1
 
     def CDfunction(self,x):
 
-        return 0
+        return 1
 
 class Math2:
     def integration(self, step, array, type):
