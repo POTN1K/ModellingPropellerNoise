@@ -15,4 +15,4 @@ def chord_poly(x, r_=0.15):
 
 
 alpha = np.arctan(v_free / v_tip) * 180 / np.pi
-print(alpha)
+#print(alpha)
