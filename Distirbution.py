@@ -94,3 +94,4 @@ def Thrust(r, cy_):
     return 0.5 * rho * bs.v_tot ** 2 * c * cy_
 
 
+
