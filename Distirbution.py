@@ -25,6 +25,7 @@ def getForces():
     df.columns = ["Thrust", "Torque", "Time"]
     df.to_csv("measurements/loads/no_gridUPDATED.csv", index=None)
 
+
 # Runs the no grid loads, updated
 df = pd.read_csv("measurements/loads/no_gridUPDATED.csv")
 
@@ -40,6 +41,7 @@ print(Thrust_rms)
 Torque_rms = np.sqrt(sum(df["Torque"] ** 2) / df["Torque"].size)
 print(Torque_rms)
 
+
 def cx(cl, cd, phi):
     """Input phi in degrees, everything as numpy array"""
     phi = phi * np.pi / 180
@@ -51,16 +53,19 @@ def cy(cl, cd, phi):
     phi = phi * np.pi / 180
     return cl * np.cos(phi) + cd * np.sin(phi)
 
-rho=1.225
+rho = 1.225
 
-def Torque(r,c):
-    """Per blade segment"""
-    return 0.5 * rho * bs.v_tot ** 2 * c * cx(cl,cd, phi) * r
+def Torque(r, cx_):
+    """Per blade segment, cx is the return function of cx"""
+    x = r / 0.15
+    c = bs.chord_poly(x)
+    return 0.5 * rho * bs.v_tot ** 2 * c * cx_ * r
 
 
-def Thrust(c):
-    """per blade segment"""
-    return 0.5 * rho * bs.v_tot ** 2 * c * cy(cl,cd, phi)
-
+def Thrust(r, cy_):
+    """per blade segment, cy is the return function of cy"""
+    x = r / 0.15
+    c = bs.chord_poly(x)
+    return 0.5 * rho * bs.v_tot ** 2 * c * cy_
 
 
