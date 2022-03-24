@@ -24,9 +24,7 @@ class Propeller:
         self.bladePassingFrequency = (RPM / 60) * bladeNumber
         self.y = y
 
-        self.liftIntegralArea = self.liftIntegral()
-        self.dragIntegralArea = self.dragIntegral()
-        self.thicknessIntegralArea = self.thicknessIntegral()
+
 
     # propeller properties
     def B_D(self, z):  # chord to diameter ratio
@@ -118,14 +116,14 @@ class Propeller:
     # p(t)
     def pressure(self, m):
         k = self.calcFirstPart(m)
-        p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 100, m)
-        p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 100, m)
-        p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 100, m)
+       # p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 100, m)
+       # p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 100, m)
+       # p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 100, m)
         p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0, 1, 100, m, 'Simpsons')
         p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0, 1, 100, m, 'Simpsons')
         p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0, 1, 100, m, 'Simpsons')
 
-        p_mb = p_Vm + p_Dm + p_Lm
+        #p_mb = p_Vm + p_Dm + p_Lm
         p_mb2 = p_Vm2 + p_Dm2 + p_Lm2
         return 2 * p_mb2
 
@@ -181,15 +179,15 @@ class Propeller:
         return .0005  # Drag/Area
 
     def thickness(self, x):
-        # return (1 - (2 * z) ** 2) * 0.15
+        # probably needs changing
         return 0.12 * (
                     5.31329 - 87.1748 * x + 608.234 * x ** 2 - 2289.46 * x ** 3 + 5136.01 * x ** 4 - 7082.1 * x ** 5 + 5891.59 * x ** 6 - 2714.5 * x ** 7 + 532.151 * x ** 8)
         # return 0.12 * self.chord(z)
 
 
     def thicknessDist(self,x):
-        #not done
-        #NACA 4412
+        #NACA 4412 thicknes from x = [0,1]
+        #approximate as x coordinates on the x-axis are used instead of the actual surface; may need changing
         m = 0.04
         p = 0.4
         t = 0.12
@@ -202,30 +200,88 @@ class Propeller:
             y_c = ((1-2*p) +2*p*x -x**2)*m/(1-p)**2
             d_y_d_x = (p - x) * (2 * m) / ((1- p) ** 2)
 
-        theta = math.arctan(d_y_d_x)
+        theta = math.atan(d_y_d_x)
 
+        y_t = 5*t*(0.2696*math.sqrt(x) - 0.1260 * x - 0.3516 * x**2 + 0.2843*x**3 - 0.1015*x**4)
 
+        y_u = y_c + y_t*math.cos(theta)
+        y_l = y_c - y_t * math.cos(theta)
+        return [y_u,y_l] # [upper,lower]
 
+    def thicknessDistNormalized(self,x):
+        return [self.thicknessDist(x)[0]/ 0.12,self.thicknessDist(x)[1] / 0.12]
+
+    def thicknessDistDerivative(self, x):
+        theta_1 = 0
+        theta_2 = 0
+        h = 0.001
+        if(x==0):
+            theta_1 = math.pi/2
+            theta_2 = math.pi / 2
+            d_x_1 = math.inf
+            d_x_2 = -math.inf
+
+        else:
+            d_x_1 = (self.thicknessDist(x+h)[0]  - self.thicknessDist(x)[0])/(h)
+            theta_1 = math.atan(d_x_1)
+            d_x_2 = (self.thicknessDist(x + h)[1]  -  self.thicknessDist(x)[1]) / (h)
+            theta_2 = math.atan(d_x_2)
+
+        #return  [theta_1,theta_2] #angle
+        return [d_x_1,d_x_2] #slope
+
+    def Cp_u(self, x, z):
+        # to be determined
 
         return 0
 
-    def liftDist(self,x):
-        # not done
-        #actual lift distribution
-        lift = self.CLfunction(x + 0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(x)
-        return lift
+    def Cp_l(self, x, z):
+        # to be determined
 
-    def dragDist(self, x):
-        #not done
-        # actual drag distribution
+        return 1
+
+    def N_chord(self,z, x):
+        dN = self.Cp_l(x+0.5,z) - self.Cp_u(x+0.5,z)
+        #dN = self.C_pl(x, z)*np.cos(self.thicknessDistDericative(x)[1]) - self.C_pu(x, z)*np.cos(self.thicknessDistDericative(x)[0])
+        return dN
+    def A_chord(self, z,x):
+        #dA = Cp_u(x,z) *np.sin(self.thicknessDistDericative(x)[1]) - Cpl(x,z) * df_thickness(x)[1]
+        dA = self.Cp_u(x+0.5,z) *self.thicknessDistDerivative(x+0.5)[0] - self.Cp_l(x+0.5,z) *self.thicknessDistDerivative(x+0.5)[1]
+        return dA
+
+    def liftDist(self,x,z):
+        dN = self.N_chord(z,x)
+        dA =self.A_chord(z,x)
+        dL = dN*np.cos(self.angle_of_attack(z)) - dA*np.sin(self.angle_of_attack(z))
+        #Lift = self.CLfunction(x + 0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(x)
+        #print(dL)
+        return dL
+
+    def normalisedLiftDist(self, x, z):
+        return self.liftDist(x, z) /self.liftArea
+
+    def areaLift(self,z):
+        area = math2.integration(self.liftDist, -0.499, 0.5, 100, z, 'Simpsons')
+        return area
+
+    def dragDist(self, x,z):
+        dN = self.N_chord(z, x)
+        dA = self.A_chord(z, x)
+        dD = dN * np.sin(self.angle_of_attack(z)) + dA * np.cos(self.angle_of_attack(z))
+        #print(dD)
         #drag = self.CDfunction(x + 0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(x)
-        return drag
+        return dD
 
+    def areaDrag(self,z):
+        area = math2.integration(self.dragDist, -0.499, 0.5, 100, z, 'Simpsons')
+        return area
 
-
+    def normalisedDragDist(self, x, z):
+        #area = math2.integration(self.dragDist, -0.5, 0.5, 100, z, 'Simpsons')
+        return self.dragDist(x, z) / self.dragArea
 
 class Math2:
-    def integration(self, func, a, b, steps, args=[], type):
+    def integration(self, func, a, b, steps, args, type):
         h = (b - a) / steps
         if type == 'trapezium':
             area = 0
