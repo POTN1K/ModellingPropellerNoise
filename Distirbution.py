@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import blade_speed as bs
 
 
 def txt_to_csv(file, name):
@@ -49,3 +50,17 @@ def cy(cl, cd, phi):
     """Input phi in degrees, everything as numpy array"""
     phi = phi * np.pi / 180
     return cl * np.cos(phi) + cd * np.sin(phi)
+
+rho=1.225
+
+def Torque(r,c):
+    """Per blade segment"""
+    return 0.5 * rho * bs.v_tot ** 2 * c * cx(cl,cd, phi) * r
+
+
+def Thrust(c):
+    """per blade segment"""
+    return 0.5 * rho * bs.v_tot ** 2 * c * cy(cl,cd, phi)
+
+
+
