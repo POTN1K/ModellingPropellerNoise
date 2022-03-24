@@ -38,6 +38,13 @@ class Propeller:
         B_D = 0.5 * (B_D_o + 0.05)
         return B_D
 
+    def twist(self,x):
+        twist = -8971.329845161235 + 206093.7010106019 * x - 2.0708079035287888e6 * x ** 2 + 1.2100709270279987e7 * x ** 3 - 4.5793508020059824e7 * x ** 4 + 1.1806041107129405e8 * x ** 5 - 2.1196809140788797e8 * x ** 6 + 2.6550027408285195e8 * x ** 7 - 2.2773507697170436e8 * x ** 8 + 1.2759430429713346e8 * x ** 9 - 4.208253179063628e7 * x ** 10 + 6.197207001092323e6 * x ** 11
+        return twist
+
+    def angle_of_attack(self,z):#different from that group but not that different
+        return (self.twist(z)-(np.arctan(self.flow.M_x**2/(self.M_r(z)**2))*180/np.pi))*np.pi/180
+
     def chord(self, z):
         c = self.B_D(z) * self.diameter
         return c
@@ -93,25 +100,22 @@ class Propeller:
         m = args[1]
 
         k_x = self.k_x(z, m)
-        Drag_sec = self.CDfunction(x + 0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(
-            z)
+        Drag_sec = self.normalisedDragDist(x,z)
         return Drag_sec * np.exp(1j * k_x * x)
 
     def psi_L_derivative(self, x, args):
         z = args[0]
         m = args[1]
-        k_x = self.k_x(z, m)
 
-        Lift_sec = self.CLfunction(x + 0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(
-            z)
-        # print((self.M_r(x)))
+        k_x = self.k_x(z, m)
+        Lift_sec = self.normalisedLiftDist(x,z)
         return Lift_sec * np.exp(1j * k_x * x)
 
     def psi_V_derivative(self, x, args):
         z = args[0]
         m = args[1]
         k_x = self.k_x(z, m)
-        return self.thickness(x + 0.5) * np.exp(1j * k_x * x)
+        return (self.thicknessDistNormalized(x+0.5)[0]-self.thicknessDistNormalized(x+0.5)[1]) * np.exp(1j * k_x * x)
 
     # p(t)
     def pressure(self, m):
@@ -147,6 +151,7 @@ class Propeller:
         return P_Vm_1 * P_Vm_2
 
     def p_Dm_derivative(self, z, m):
+        self.dragArea = self.areaDrag(z)
         k_x = self.k_x(z, m)
         C_D = self.CDfunction(z)
         P_Dm_1 = (self.M_r(z)) ** 2 * math2.besselsFunc(m * self.bladeNumber,
@@ -157,6 +162,7 @@ class Propeller:
         return P_Dm_1 * P_Dm_2
 
     def p_Lm_derivative(self, z, m):
+        self.liftArea = self.areaLift(z)
         k_x = self.k_x(z, m)
         C_L = self.CLfunction(z)
         # print(C_L)
