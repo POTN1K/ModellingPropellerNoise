@@ -69,23 +69,23 @@ class Propeller:
     # The psi's
     # method 1
     def psi_D(self, z, m):
-        return math2.integration(self.psi_D_derivative, -0.5, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_D_derivative, -0.4999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_L(self, z, m):
-        return math2.integration(self.psi_L_derivative, -0.5, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_L_derivative, -0.4999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_V(self, z, m):
-        return math2.integration(self.psi_V_derivative, -0.5, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_V_derivative, -0.4999, 0.5, 100, [z, m], 'Simpsons')
 
     # method 2
     def psi_D2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_D_derivative, -0.5, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_D_derivative, -0.4999, 0.5, 100, [z, m])
 
     def psi_L2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_L_derivative, -0.5, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_L_derivative, -0.4999, 0.5, 100, [z, m])
 
     def psi_V2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_V_derivative, -0.5, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_V_derivative, -0.4999, 0.5, 100, [z, m])
 
     # Derivative of psi's
     def psi_D_derivative(self, x, args):
@@ -173,6 +173,8 @@ class Propeller:
         # Lift function y = x**2 +x
         return .2  # Lift/area
 
+
+
     def CDfunction(self, x):
         # area = math2.integrateRiemannSums(Drag)
         # cd = x**2 + x
@@ -233,7 +235,7 @@ class Propeller:
     def Cp_u(self, x, z):
         # to be determined
 
-        return 0
+        return -1
 
     def Cp_l(self, x, z):
         # to be determined
