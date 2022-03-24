@@ -24,7 +24,7 @@ def getForces():
     df.columns = ["Thrust", "Torque", "Time"]
     df.to_csv("measurements/loads/no_gridUPDATED.csv", index=None)
 
-
+# Runs the no grid loads, updated
 df = pd.read_csv("measurements/loads/no_gridUPDATED.csv")
 
 fig, (ax1, ax2, ax3) = plt.subplots(3)
@@ -52,4 +52,3 @@ def cy(cl, cd, phi):
     return cl * np.cos(phi) + cd * np.sin(phi)
 
 
-t = {{0.22, 43.6}, {0.27, 38}, {0.3, 35}, {0.39, 29}, {0.45, 25}, {0.5, 22.5}, {0.6, 19.5}, {0.7, 17}, {0.8, 14.5}, {0.9, 13}, {0.95, 12.3}, {1, 12}}
