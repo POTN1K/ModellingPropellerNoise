@@ -91,7 +91,11 @@ def Thrust(r, cy_):
     """per blade segment, cy is the return function of cy"""
     x = r / 0.15
     c = bs.chord_poly(x)
+<<<<<<< HEAD
     return 0.5 * rho * bs.v_tot ** 2 * c * cy_
 
 
 
+=======
+    return 0.5 * rho * bs.v_tot ** 2 * c * cy_
+>>>>>>> 4c2cf77a748a705c68d75c02b3e15167085142e8
