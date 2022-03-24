@@ -75,3 +75,18 @@ def cy(cl, cd, phi):
     """Input phi in degrees, everything as numpy array"""
     phi = phi * np.pi / 180
     return cl * np.cos(phi) + cd * np.sin(phi)
+
+rho = 1.225
+
+def Torque(r, cx_):
+    """Per blade segment, cx is the return function of cx"""
+    x = r / 0.15
+    c = bs.chord_poly(x)
+    return 0.5 * rho * bs.v_tot ** 2 * c * cx_ * r
+
+
+def Thrust(r, cy_):
+    """per blade segment, cy is the return function of cy"""
+    x = r / 0.15
+    c = bs.chord_poly(x)
+    return 0.5 * rho * bs.v_tot ** 2 * c * cy_
