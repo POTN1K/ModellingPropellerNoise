@@ -1,4 +1,6 @@
 import pandas as pd
+import scipy as sp
+from scipy import interpolate
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -7,6 +9,29 @@ def txt_to_csv(file, name):
     read_file = pd.read_csv(file)
     read_file.to_csv("measurements/loads/" + name + ".csv", index=None)
 
+def find_dist():
+    data = np.genfromtxt("measurements/loads/dataset.csv", delimiter=",", skip_header=1, usecols=(1, 2, -1))
+    CL_list = [CL for CL, CD, x in data]
+    x_list = [x for CL, CD, x in data]
+    CD_list = [CD for CL, CD, x in data]
+    plt.subplot(1, 2, 1)
+    plt.title("Lift Coefficient Along Span")
+    plt.plot(x_list, CL_list, "r-")
+    plt.xlabel("x[-]")
+    plt.ylabel("CL[-]")
+    plt.grid()
+    plt.subplot(1, 2, 2)
+    plt.title("Drag Coefficient Along Span")
+    plt.plot(x_list, CD_list, "b-")
+    plt.xlabel("x[-]")
+    plt.ylabel("CD[-]")
+    plt.grid()
+    plt.show()
+    L_tot_func = sp.interpolate.interp1d(x_list, CL_list, kind="nearest-up")
+    D_tot_func = sp.interpolate.interp1d(x_list, CD_list, kind="nearest-up")
+
+    return L_tot_func, D_tot_func
+print(find_dist()[0](1))
 
 def getForces():
     file = pd.read_csv("measurements/loads/no_grid.csv", header=None, usecols=[2, 5])
