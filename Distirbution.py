@@ -10,6 +10,7 @@ def txt_to_csv(file, name):
     read_file = pd.read_csv(file)
     read_file.to_csv("measurements/loads/" + name + ".csv", index=None)
 
+
 def find_dist():
     data = np.genfromtxt("measurements/loads/dataset.csv", delimiter=",", skip_header=1, usecols=(1, 2, -1))
     CL_list = [CL for CL, CD, x in data]
@@ -32,7 +33,10 @@ def find_dist():
     D_tot_func = sp.interpolate.interp1d(x_list, CD_list, kind="nearest-up")
 
     return L_tot_func, D_tot_func
+
+
 print(find_dist()[0](1))
+
 
 def getForces():
     file = pd.read_csv("measurements/loads/no_grid.csv", header=None, usecols=[2, 5])
@@ -61,10 +65,8 @@ ax3.scatter(df["Torque"], df["Thrust"])
 plt.show()
 
 Thrust_rms = np.sqrt(sum(df["Thrust"] ** 2) / df["Thrust"].size)
-print(Thrust_rms)
 
 Torque_rms = np.sqrt(sum(df["Torque"] ** 2) / df["Torque"].size)
-print(Torque_rms)
 
 
 def cx(cl, cd, phi):
@@ -78,17 +80,30 @@ def cy(cl, cd, phi):
     phi = phi * np.pi / 180
     return cl * np.cos(phi) + cd * np.sin(phi)
 
+
 rho = 1.225
+
 
 def Torque(r, cx_):
     """Per blade segment, cx is the return function of cx"""
-    x = r / 0.15
+    vtot, x, y = bs.bladeSection(r)
     c = bs.chord_poly(x)
-    return 0.5 * rho * bs.v_tot ** 2 * c * cx_ * r
+    return 0.5 * rho * vtot ** 2 * c * cx_ * r
 
 
 def Thrust(r, cy_):
     """per blade segment, cy is the return function of cy"""
-    x = r / 0.15
+    vtot, x, y = bs.bladeSection(r)
     c = bs.chord_poly(x)
-    return 0.5 * rho * bs.v_tot ** 2 * c * cy_
+    return 0.5 * rho * vtot ** 2 * c * cy_
+
+
+df = pd.read_csv(r"measurements/loads/CP_data2.csv")
+
+cx_ = cx(df["CL"], df["CD"], df["alpha"])
+cy_ = cy(df["CL"], df["CD"], df["alpha"])
+
+ThrustM = np.average(Thrust(df["r"], cy_))*.15
+TorqueM = np.average(Torque(df["r"], cx_))*.15
+
+print(f"Real values: {Thrust_rms}, {Torque_rms}\n Approx values: {ThrustM}, {TorqueM}")
