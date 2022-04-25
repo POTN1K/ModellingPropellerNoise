@@ -19,7 +19,7 @@ def twist_poly(x):
 # Blade characteristics
 rpm = 8000
 omega = rpm * 2 * np.pi / 60
-v_free = 9
+v_free = 9*1.25
 j = v_free / (rpm / 60 * 0.3)
 
 
@@ -46,4 +46,4 @@ for element in r:
     phi_list.append(p)
 
 df = pd.DataFrame({"r": r, "x": x_list, "v": v_list, "phi": phi_list})
-df.to_csv(r"measurements/loads/blade.csv", index=None)
+df.to_csv(r"measurements/loads/blade25.csv", index=None)
