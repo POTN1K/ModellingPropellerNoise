@@ -21,7 +21,7 @@ class Propeller:
         self.diameter = diameter
         self.radius = 0.5 * diameter
         self.x = x
-        self.theta = theta
+        self.theta = theta #np.acos((cos(theta)*(1-self.M_x*self.M_x*sin(theta)*sin(theta))**0.5)+self.M_x*sin(theta)*sin(theta)
         self.M_t = (self.RPM * 2 * math.pi / 60 * diameter / 2) / flow.a_0
         self.bladePassingFrequency = (RPM / 60) * bladeNumber
         self.y = y
@@ -77,17 +77,17 @@ class Propeller:
     # The psi's
     # method 1
     def psi_D(self, z, m):
-        return math2.integration(self.psi_D_derivative, -0.4999, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_D_derivative, -0.49999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_L(self, z, m):
-        return math2.integration(self.psi_L_derivative, -0.4999, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_L_derivative, -0.49999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_V(self, z, m):
-        return math2.integration(self.psi_V_derivative, -0.4999, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_V_derivative, -0.49999, 0.5, 100, [z, m], 'Simpsons')
 
     # method 2
     def psi_D2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_D_derivative, -0.4999, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_D_derivative, -0.49999, 0.5, 100, [z, m])
 
     def psi_L2(self, z, m):
         return math2.integrateRiemannSums(self.psi_L_derivative, -0.49999, 0.5, 100, [z, m])
@@ -124,9 +124,9 @@ class Propeller:
        # p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 100, m)
        # p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 100, m)
        # p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 100, m)
-        p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0, 1, 100, m, 'Simpsons')
-        p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0, 1, 100, m, 'Simpsons')
-        p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0, 1, 100, m, 'Simpsons')
+        p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0.2267, 1, 100, m, 'Simpsons')
+        p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0.2267, 1, 100, m, 'Simpsons')
+        p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0.2267, 1, 100, m, 'Simpsons')
 
         #p_mb = p_Vm + p_Dm + p_Lm
         p_mb2 = p_Vm2 + p_Dm2 + p_Lm2
