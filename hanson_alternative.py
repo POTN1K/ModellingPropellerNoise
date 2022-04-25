@@ -1,4 +1,6 @@
 import math
+import os
+
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sc
@@ -25,8 +27,32 @@ class Propeller:
         self.M_t = (self.RPM * 2 * math.pi / 60 * diameter / 2) / flow.a_0
         self.bladePassingFrequency = (RPM / 60) * bladeNumber
         self.y = y
+        self.thicknesstoCord = 0.12
+        self.dopplerFactor = 1 #(1 - self.flow.M_x * math.cos(self.theta))
 
+        with open(r"numerical results/Liftpoints.csv") as file:
+            self.CL = np.genfromtxt(file, delimiter=',', dtype=float)
+            x = np.arange(0.2267,1,(1-0.2267)/len(self.CL))
+            self.Lift = sc.interpolate.interp1d(x, self.CL, kind='cubic',fill_value="extrapolate")
+        with open(r"numerical results/Dragpoints.csv") as file:
+            self.CD = np.genfromtxt(file, delimiter=',', dtype=float)
+            x = np.arange(0.2267, 1, (1-0.2267) / len(self.CD))
+            self.Drag = sc.interpolate.interp1d(x, self.CD, kind='cubic',fill_value="extrapolate")
 
+        with open(r"numerical results/CP Interpolation/mChord.csv") as chordCoordsFile:
+            chordCoords = np.genfromtxt(chordCoordsFile, delimiter=',',dtype=float)
+            with open(r"numerical results/CP Interpolation/mSpan.csv") as spanCoordsFile:
+                spanCoords = np.genfromtxt(spanCoordsFile, delimiter=',',dtype=float)
+                with open(r"numerical results/CP Interpolation/old/mDown.csv") as downPressureFile:
+                    downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)
+                    with open(r"numerical results/CP Interpolation/old/mUp.csv") as upPressureFile:
+                        upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)
+                        #print(downPressures)
+                        chordCoordArr2=chordCoords[0]
+                        spanCoordArr2=spanCoords[:,0]
+
+        self.Cpl = sc.interpolate.interp2d(chordCoordArr2, spanCoordArr2, downPressures, kind='cubic')
+        self.Cpu = sc.interpolate.interp2d(chordCoordArr2, spanCoordArr2, upPressures, kind='cubic')
 
     # propeller properties
     def B_D(self, z):  # chord to diameter ratio
@@ -156,8 +182,8 @@ class Propeller:
         k_x = self.k_x(z, m)
         C_D = self.Drag(z)
         P_Dm_1 = (self.M_r(z)) ** 2 * math2.besselsFunc(m * self.bladeNumber,
-                                                        m * self.bladeNumber * z * self.M_t * np.sin(self.theta) / (
-                                                                    1 - self.flow.M_x * np.cos(self.theta)))
+                                                        m * self.bladeNumber * z * self.M_t * np.sin(self.theta) /
+                                                        (self.dopplerFactor))
         P_Dm_2 = 1j * k_x * (C_D / 2) * self.psi_D(z, m)
         P_Dm_2_alt = 1j * k_x * (C_D / 2) * self.psi_D2(z, m)
         return P_Dm_1 * P_Dm_2
@@ -168,8 +194,8 @@ class Propeller:
         C_L = self.Lift(z)
         # print(C_L)
         P_Lm_1 = (self.M_r(z)) ** 2 * math2.besselsFunc(m * self.bladeNumber,
-                                                        m * self.bladeNumber * z * self.M_t * np.sin(self.theta) / (
-                                                                    1 - self.flow.M_x * np.cos(self.theta)))
+                                                        m * self.bladeNumber * z * self.M_t * np.sin(self.theta) /
+                                                        (self.dopplerFactor))
         P_Lm_2 = 1j * k_x * (C_L / 2) * self.psi_L(z, m)
         P_Lm_2_alt = 1j * k_x * C_L / 2 * self.psi_L2(z, m)
         return P_Lm_1 * P_Lm_2
@@ -218,15 +244,18 @@ class Propeller:
         #return  [theta_1,theta_2] #angle
         return [d_x_1,d_x_2] #slope
 
+    def thicknessDistfull(self,z):
+        return np.sin(self.angle_of_attack(z))
+
     def Cp_u(self, x, z):
         # to be determined
 
-        return -1
+        return self.Cpu(x,z)
 
     def Cp_l(self, x, z): #😎😎😎😎
         # to be determined
 
-        return 1
+        return self.Cpl(x,z)
 
     def N_chord(self,z, x):
         dN = self.Cp_l(x+0.5,z) - self.Cp_u(x+0.5,z)
