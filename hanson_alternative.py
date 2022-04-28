@@ -121,7 +121,7 @@ class Propeller:
     def psi_V2(self, z, m):
         return math2.integrateRiemannSums(self.psi_V_derivative, -0.49999, 0.5, 100, [z, m])
 
-    # Derivative of psi's 🐙🐙🐙🐙🐙🐙🐙
+    # Derivative of psi's 🐙🐙🐙🐙🐙🐙
     def psi_D_derivative(self, x, args):
         z = args[0]
         m = args[1]
