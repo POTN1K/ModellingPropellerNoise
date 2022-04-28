@@ -43,9 +43,9 @@ class Propeller:
             chordCoords = np.genfromtxt(chordCoordsFile, delimiter=',',dtype=float)
             with open(r"numerical results/CP Interpolation/mSpan.csv") as spanCoordsFile:
                 spanCoords = np.genfromtxt(spanCoordsFile, delimiter=',',dtype=float)
-                with open(r"numerical results/CP Interpolation/old/mDown.csv") as downPressureFile:
+                with open(r"numerical results/CP Interpolation/mDown.csv") as downPressureFile:
                     downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)
-                    with open(r"numerical results/CP Interpolation/old/mUp.csv") as upPressureFile:
+                    with open(r"numerical results/CP Interpolation/mUp.csv") as upPressureFile:
                         upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)
                         #print(downPressures)
                         chordCoordArr2=chordCoords[0]
@@ -232,15 +232,15 @@ class Propeller:
         theta_1 = 0
         theta_2 = 0
         h = 0.001
-        if(x!=0.0):
-            d_x_1 = (self.thicknessDist(x+h)[0]  - self.thicknessDist(x)[0])/(h)
-            theta_1 = math.atan(d_x_1)
-            d_x_2 = (self.thicknessDist(x + h)[1]  -  self.thicknessDist(x)[1]) / (h)
-            theta_2 = math.atan(d_x_2)
-        else:
-            d_x_1 = math.inf
-            d_x_2 = -math.inf
 
+        d_x_1 = (self.thicknessDist(x+h)[0]  - self.thicknessDist(x)[0])/(h)
+        #theta_1 = math.atan(d_x_1)
+        d_x_2 = (self.thicknessDist(x + h)[1]  -  self.thicknessDist(x)[1]) / (h)
+        #theta_2 = math.atan(d_x_2)
+
+        # if (x == 0.0):
+        #     d_x_1 = math.inf
+        #     d_x_2 = -math.inf
         #return  [theta_1,theta_2] #angle
         return [d_x_1,d_x_2] #slope
 
@@ -266,9 +266,7 @@ class Propeller:
         #print(self.Cp_u(x+0.5,z))
         #print(self.thicknessDistDerivative(x+0.5)[0])
         dA = self.Cp_u(x+0.5,z) *self.thicknessDistDerivative(x+0.5)[0] - self.Cp_l(x+0.5,z) *self.thicknessDistDerivative(x+0.5)[1]
-        if(math.isnan(dA)):
-            #dA = 0
-            print(dA)
+        #print(self.thicknessDistDerivative(x+0.5)[0])
         return dA
 
     def liftDist(self,x,z):
