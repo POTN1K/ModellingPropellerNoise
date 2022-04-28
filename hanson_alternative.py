@@ -56,7 +56,7 @@ class Propeller:
 
     # propeller properties
     def B_D(self, z):  # chord to diameter ratio
-        r_o = z - 0.2
+        r_o = z - 0.15
         if (r_o < 0.1):
             return 0
         B_D_o = 0.127 + 0.7404112848810135 * (r_o ** 1) + -4.673821287763687 * (r_o ** 2) + 19.02690171288593 * (
@@ -156,7 +156,7 @@ class Propeller:
 
         #p_mb = p_Vm + p_Dm + p_Lm
         p_mb2 = p_Vm2 + p_Dm2 + p_Lm2
-        return 2 * p_mb2
+        return 2* p_mb2
 
     # harmonic noise level
     def noise(self, m):
@@ -208,8 +208,8 @@ class Propeller:
         m = 0.04
         p = 0.4
         t = 0.12
-        y_c = 0
-        d_y_d_x = 0
+        #y_c = 0
+        #d_y_d_x = 0
         if(x<p):
             y_c = (2*p*x-x**2)*(m)/(p**2)
             d_y_d_x = (p-x) * (2*m)/(p**2)
@@ -229,8 +229,8 @@ class Propeller:
         return [self.thicknessDist(x)[0]/ 0.12,self.thicknessDist(x)[1] / 0.12] #0.12 is the height of the airfoil
 
     def thicknessDistDerivative(self, x):
-        theta_1 = 0
-        theta_2 = 0
+        #theta_1 = 0
+        #theta_2 = 0
         h = 0.001
 
         d_x_1 = (self.thicknessDist(x+h)[0]  - self.thicknessDist(x)[0])/(h)
