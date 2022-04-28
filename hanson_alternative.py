@@ -106,10 +106,11 @@ class Propeller:
         return math2.integration(self.psi_D_derivative, -0.49999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_L(self, z, m):
-        return math2.integration(self.psi_L_derivative, -0.49999, 0.5, 100, [z, m], 'Simpsons')
+        #print(math2.integration(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons'))
+        return math2.integration(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_V(self, z, m):
-        return math2.integration(self.psi_V_derivative, -0.49999, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_V_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons')
 
     # method 2
     def psi_D2(self, z, m):
@@ -153,7 +154,7 @@ class Propeller:
         p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0.2267, 1, 100, m, 'Simpsons')
         p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0.2267, 1, 100, m, 'Simpsons')
         p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0.2267, 1, 100, m, 'Simpsons')
-
+        #print(p_Vm2,p_Lm2,p_Dm2)
         #p_mb = p_Vm + p_Dm + p_Lm
         p_mb2 = p_Vm2 + p_Dm2 + p_Lm2
         return 2* p_mb2
@@ -161,12 +162,12 @@ class Propeller:
     # harmonic noise level
     def noise(self, m):
         # p = self.pressure(m)
-        p = abs(self.pressure(m))
+        p = self.pressure(m)
         p_ref = 20 * 10 ** -6
         # print((p**2) / (p_ref**2))
 
-        OASPL = 20 * math.log10((p) / (p_ref))
-        return OASPL
+        OASPL =20 * np.log10((p) / (p_ref))
+        return abs(OASPL)
 
     def p_Vm_derivative(self, z, m):
         k_x = self.k_x(z, m)
@@ -281,7 +282,7 @@ class Propeller:
         return self.liftDist(x, z) /self.liftArea
 
     def areaLift(self,z):
-        area = math2.integration(self.liftDist, -0.49999, 0.5, 100, z, 'Simpsons')
+        area = math2.integration(self.liftDist, -0.5, 0.5, 100, z, 'Simpsons')
         return area
 
     def dragDist(self, x,z):
@@ -293,7 +294,7 @@ class Propeller:
         return dD
 
     def areaDrag(self,z):
-        area = math2.integration(self.dragDist, -0.49999, 0.5, 100, z, 'Simpsons')
+        area = math2.integration(self.dragDist, -0.5, 0.5, 100, z, 'Simpsons')
         return area
 
     def normalisedDragDist(self, x, z):
