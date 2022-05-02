@@ -19,7 +19,7 @@ def twist_poly(x):
 # Blade characteristics
 rpm = 8000
 omega = rpm * 2 * np.pi / 60
-v_free = 9*1.25
+v_free = 8
 j = v_free / (rpm / 60 * 0.3)
 
 
@@ -34,16 +34,23 @@ def bladeSection(r):
     return v_tot, x, phi
 
 
+def Re(c, u):
+    return 1.225 * u * c / 1.802e-5
+
+
 r = np.linspace(0.033, .15, 10)
 
 v_list = []
 x_list = []
 phi_list = []
+re_list = []
 for element in r:
     v, x, p = bladeSection(element)
+    re = Re(chord_poly(x),v)
     v_list.append(v)
     x_list.append(x)
     phi_list.append(p)
+    re_list.append(re)
 
-df = pd.DataFrame({"r": r, "x": x_list, "v": v_list, "phi": phi_list})
-df.to_csv(r"measurements/loads/blade25.csv", index=None)
+df = pd.DataFrame({"phi": phi_list, "x": x_list, "r": r,  "re": re_list})
+df.to_csv(r"measurements/loads/bladeN.csv", index=None)
