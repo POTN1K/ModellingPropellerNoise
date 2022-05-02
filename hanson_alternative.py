@@ -43,9 +43,9 @@ class Propeller:
             chordCoords = np.genfromtxt(chordCoordsFile, delimiter=',', dtype=float)
             with open(r"numerical results/CP Interpolation/mSpan.csv") as spanCoordsFile:
                 spanCoords = np.genfromtxt(spanCoordsFile, delimiter=',', dtype=float)
-                with open(r"numerical results/CP Interpolation/mDown.csv") as downPressureFile:
+                with open(r"numerical results/CP Interpolation/N0_Down.csv") as downPressureFile:
                     downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)
-                    with open(r"numerical results/CP Interpolation/mUp.csv") as upPressureFile:
+                    with open(r"numerical results/CP Interpolation/N0_Up.csv") as upPressureFile:
                         upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)
                         # print(downPressures)
                         chordCoordArr2 = chordCoords[0]
