@@ -185,7 +185,7 @@ class Propeller:
         C_D = self.Drag(z)
         P_Dm_1 = (self.M_r(z)) ** 2 * math2.besselsFunc(m * self.bladeNumber,
                                                         m * self.bladeNumber * z * self.M_t * np.sin(self.theta) /
-                                                        (self.dopplerFactor))
+                                                        self.dopplerFactor)
         P_Dm_2 = 1j * k_x * (C_D / 2) * self.psi_D(z, m)
         P_Dm_2_alt = 1j * k_x * (C_D / 2) * self.psi_D2(z, m)
         return P_Dm_1 * P_Dm_2
