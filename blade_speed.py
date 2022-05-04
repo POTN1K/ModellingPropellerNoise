@@ -52,5 +52,7 @@ for element in r:
     phi_list.append(p)
     re_list.append(re)
 
-df = pd.DataFrame({"phi": phi_list, "x": x_list, "r": r,  "re": re_list})
-df.to_csv(r"measurements/loads/bladeN.csv", index=None)
+#df = pd.DataFrame({"phi": phi_list, "x": x_list, "r": r,  "re": re_list})
+#df.to_csv(r"measurements/loads/bladeN.csv", index=None)
+
+print(bladeSection(0.6*0.15))
