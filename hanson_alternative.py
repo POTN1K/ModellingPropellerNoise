@@ -393,16 +393,15 @@ flow = Flow(1.225, 8, 343)
 
 
 # yArr = []
-for i in range(len(miccoord)):
-    propeller = Propeller(flow, 8000, 2, 0.3, miccoord[0], miccoord[1], miccoord[2])
-    noise = []
-    for j in range(1, 4):
-        x = j
-        print('Harmonic ' + str(x))
-        # pressure = propeller.pressure(x)
-        y = propeller.noise(x)
-        print(str(y) + " dB")
-        noise.append(y)
+propeller = Propeller(flow, 8000, 2, 0.3, miccoord[0], miccoord[1], miccoord[2])
+noise = []
+for j in range(1, 4):
+    x = j
+    print('Harmonic ' + str(x))
+    # pressure = propeller.pressure(x)
+    y = propeller.noise(x)
+    print(str(y) + " dB")
+    noise.append(y)
 
 import graphs
 
