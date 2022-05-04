@@ -44,9 +44,9 @@ class Propeller:
             chordCoords = np.genfromtxt(chordCoordsFile, delimiter=',', dtype=float)
             with open(r"numerical results/CP Interpolation/mSpan.csv") as spanCoordsFile:
                 spanCoords = np.genfromtxt(spanCoordsFile, delimiter=',', dtype=float)
-                with open(r"numerical results/CP Interpolation/N2_Down.csv") as downPressureFile:
+                with open(r"numerical results/CP Interpolation/NAVEDOWN.csv") as downPressureFile:
                     downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)
-                    with open(r"numerical results/CP Interpolation/N2_Up.csv") as upPressureFile:
+                    with open(r"numerical results/CP Interpolation/NAVEUP.csv") as upPressureFile:
                         upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)
                         # print(downPressures)
                         chordCoordArr2 = chordCoords[0]
@@ -401,19 +401,17 @@ flow = Flow(1.225, 8, 343)
 
 results = []
 # yArr = []
-for i in range(len(miccoord)):
-    propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
-    print('Microphone ' + str(i + 1))
-    noise = []
-    for j in range(1, 4):
-        x = j
-        print('Harmonic ' + str(x))
-        # pressure = propeller.pressure(x)
-        y = propeller.noise(x)
-        print(str(y) + " dB")
-        noise.append(y)
-    results.append(noise)
-print(results)
+i=5
+propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
+print('Microphone ' + str(i + 1))
+noise = []
+for j in range(1, 4):
+    x = j
+    print('Harmonic ' + str(x))
+    # pressure = propeller.pressure(x)
+    y = propeller.noise(x)
+    print(str(y) + " dB")
+    noise.append(y)
 
 import graphs
 
