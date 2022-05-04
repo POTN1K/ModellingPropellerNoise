@@ -312,7 +312,7 @@ class Propeller:
         #drag = self.CDfunction(x + 0.5) * 0.5 * self.flow.density * (self.M_r(x) * self.flow.a_0) ** 2 * self.chord(x)
         return dD
 
-    def areaDrag(self,z):
+    def areaDrag(self,z): #MAJOR PROBLEM HERE
         area = math2.integration(self.dragDist, -0.49999, 0.5, 100, z, 'Simpsons')
         area2 = math2.integration(self.dragDist, -0.49999, 0.5, 400, z, 'Simpsons')
         print(str(area) + " " + str(area2) + " " + str(z) + " " + str(area/area2))
