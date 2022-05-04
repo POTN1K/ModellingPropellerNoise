@@ -379,15 +379,7 @@ math2 = Math2()
 
 mic = 0.075
 # microphone spacing is 0.075m
-miccoord = [[12 * mic, math.atan(1.2 / (12 * mic)), 1.2],  # x,theta,y
-            [9 * mic, math.atan(1.2 / (9 * mic)), 1.2],
-            [6 * mic, math.atan(1.2 / (6 * mic)), 1.2],
-            [3 * mic, math.atan(1.2 / (3 * mic)), 1.2],
-            [0 * mic, np.pi / 2, 1.2],
-            [-3 * mic, math.atan(1.2 / (-3 * mic)), 1.2],
-            [-6 * mic, math.atan(1.2 / (-6 * mic)), 1.2],
-            [-9 * mic, math.atan(1.2 / (-9 * mic)), 1.2],
-            [-12 * mic, math.atan(1.2 / (-12 * mic)), 1.2], ]
+miccoord = [0 * mic, np.pi / 2, 1.2]
 
 # flow: density,velocity,a_0
 flow = Flow(1.225, 8, 343)
@@ -399,11 +391,10 @@ flow = Flow(1.225, 8, 343)
 # print("middle Mic harmonic 2: " + str(middleMic.noise(2)))
 # print("middle Mic harmonic 3: " + str(middleMic.noise(3)))
 
-results = []
+
 # yArr = []
 for i in range(len(miccoord)):
-    propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
-    print('Microphone ' + str(i + 1))
+    propeller = Propeller(flow, 8000, 2, 0.3, miccoord[0], miccoord[1], miccoord[2])
     noise = []
     for j in range(1, 4):
         x = j
@@ -412,5 +403,8 @@ for i in range(len(miccoord)):
         y = propeller.noise(x)
         print(str(y) + " dB")
         noise.append(y)
-    results.append(noise)
-print(results)
+
+import graphs
+
+graphs.plot(noise)
+
