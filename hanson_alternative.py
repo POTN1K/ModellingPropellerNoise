@@ -107,21 +107,21 @@ class Propeller:
         return math2.integration(self.psi_D_derivative, -0.499999, 0.5, 400, [z, m], 'Simpsons')
 
     def psi_L(self, z, m):
-        # print(math2.integration(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons'))
-        return math2.integration(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons')
+        # print(math2.integration(self.psi_L_derivative, -0.499999, 0.5, 200, [z, m], 'Simpsons'))
+        return math2.integration(self.psi_L_derivative, -0.499999, 0.5, 200, [z, m], 'Simpsons')
 
     def psi_V(self, z, m):
-        return math2.integration(self.psi_V_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons')
+        return math2.integration(self.psi_V_derivative, -0.499999, 0.5, 200, [z, m], 'Simpsons')
 
     # method 2
     def psi_D2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_D_derivative, -0.499999, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_D_derivative, -0.499999, 0.5, 200, [z, m])
 
     def psi_L2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_L_derivative, -0.499999, 0.5, 200, [z, m])
 
     def psi_V2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_V_derivative, -0.499999, 0.5, 100, [z, m])
+        return math2.integrateRiemannSums(self.psi_V_derivative, -0.499999, 0.5, 200, [z, m])
 
     # Derivative of psi's 🐙🐙🐙🐙🐙🐙
     def psi_D_derivative(self, x, args):
@@ -147,14 +147,14 @@ class Propeller:
     # p(t)🐙🐙🐙🐙🐙🐙🐙
     def pressure(self, m):
         k = self.calcFirstPart(m)
-        # p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 100, m)
-        # p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 100, m)
-        # p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 100, m)
+        # p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 200, m)
+        # p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 200, m)
+        # p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 200, m)
 
-        p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0.2267, 1, 100, m, 'Simpsons')
-        p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0.2267, 1, 100, m, 'Simpsons')
-        p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0.2267, 1, 100, m, 'Simpsons')
-        #print(p_Vm2, p_Lm2, p_Dm2)
+        p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0.2267, 1, 200, m, 'Simpsons')
+        p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0.2267, 1, 200, m, 'Simpsons')
+        p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0.2267, 1, 200, m, 'Simpsons')
+        print(p_Vm2, p_Lm2, p_Dm2)
         # p_mb = p_Vm + p_Dm + p_Lm
         p_mb2 = p_Vm2 + p_Dm2 + p_Lm2
         return 2 * p_mb2
@@ -311,13 +311,13 @@ class Propeller:
         return dD
 
     def areaDrag(self, z):  # MAJOR PROBLEM HERE
-        area = math2.integration(self.dragDist, -0.49999, 0.5, 100, z, 'Simpsons')
-        area2 = math2.integration(self.dragDist, -0.49999, 0.5, 400, z, 'Simpsons')
-        #print(str(area) + " " + str(area2) + " " + str(z) + " " + str(area / area2))
+        area = math2.integration(self.dragDist, -0.49999, 0.5, 200, z, 'Simpsons')
+       # area2 = math2.integration(self.dragDist, -0.49999, 0.5, 400, z, 'Simpsons')
+       # print(str(area) + " " + str(area2) + " " + str(z) + " " + str(area / area2))
         return area
 
     def normalisedDragDist(self, x, z):
-        # area = math2.integration(self.dragDist, -0.5, 0.5, 100, z, 'Simpsons')
+        # area = math2.integration(self.dragDist, -0.5, 0.5, 200, z, 'Simpsons')
         return self.dragDist(x, z) / self.dragArea
 
 
@@ -402,6 +402,7 @@ for j in range(1, 4):
     y = propeller.noise(x)
     print(str(y) + " dB")
     noise.append(y)
+print(noise)
 
 import graphs
 
