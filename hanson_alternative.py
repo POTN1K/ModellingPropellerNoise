@@ -381,7 +381,7 @@ results = []
 for i in range(len(miccoord)):
     propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
     print('Microphone ' + str(i + 1))
-    noise = ['microphone ' + str(i + 1) + ' x: ' + str(miccoord[i][0]) + " y: 1.2"]
+    noise = []
     for j in range(1, 4):
         x = j
         print('Harmonic ' + str(x))
@@ -389,11 +389,5 @@ for i in range(len(miccoord)):
         print(str(y) + " dB")
         noise.append(y)
     results.append(noise)
-    # xArr.append(133.33 * x)
-    # yArr.append(y)
 print(results)
-# plt.plot(xArr, yArr, "r+")
-# plt.show()
-# 😀😁😂🤣😃😄😅😆😉😊😋😎😍😘🥰😗😙😚☺🙂🤗🤩🤔🤨😐😑😶🙄😏😣😥😮🤐😯😪😫🥱😴😌😛😜😝🤤😒😓😔😕🙃🤑😲☹🙁😖😞😟😤😢😭😦😧😨😩🤯😬😰😱🥵🥶😳🤪😵🥴😠😡🤬😷🤒🤕🤢🤮🤧😇🥳🥺🤠🤡🤥🤫🤭🧐🤓😈👿
-# stuff to do 🤩:
-# more accurate airfoil x-coordinate 🤢, probably unfeasable actually
+

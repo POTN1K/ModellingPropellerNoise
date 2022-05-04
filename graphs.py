@@ -152,13 +152,13 @@ micV=[[95.29511711,74.70750562,60.82767215],
       [93.81468125,78.57246247,55.93370577]]
 
 micmean = np.mean(mic, axis=0)
-plt.plot(1, mic[4][0], 'bo', color='b')
-plt.plot(2, mic[4][1], 'bo', color='b')
-plt.plot(3, mic[4][2], 'bo', color='b')
+plt.plot(1, mic[4][0], 'bo')
+plt.plot(2, mic[4][1], 'bo')
+plt.plot(3, mic[4][2], 'bo')
 
-plt.plot(1, micV[4][0], 'bo', color='r')
-plt.plot(2, micV[4][1], 'bo', color='r')
-plt.plot(3, micV[4][2], 'bo', color='r')
+plt.plot(1, micV[4][0], 'ro')
+plt.plot(2, micV[4][1], 'ro')
+plt.plot(3, micV[4][2], 'ro')
 
 
 plt.plot(fAdjusted, spl2)
