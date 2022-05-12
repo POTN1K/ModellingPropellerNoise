@@ -69,8 +69,8 @@ def plot(mic, n=13):
     # this means a experiment duration of 20 seconds
     spl2 = []
     PSD = np.zeros(5001)
-    filename = ["measurements/noise/Bkg_U8_grid.h5", "measurements/noise/Motor_U0_rpm8000.h5",
-                "measurements/noise/Propeller_U8_grid.h5"]
+    filename = ["measurements/noise/Bkg_U8_nogrid.h5", "measurements/noise/Motor_U0_rpm8000.h5",
+                "measurements/noise/Propeller_U8_nogrid.h5"]
     # filename = "Bkg_U8_grid.h5"
     # filename = "Bkg_U8_nogrid.h5"
     # filename="Motor_U0_rpm8000.h5"
@@ -194,7 +194,3 @@ micTN2 = np.array([[70.6350207003376, 56.01251759022459, 39.58021104143517],
           [65.89541721635096, 54.6307723140813, 41.68663378739783],
           [68.20102581326223, 56.310956596466454, 41.74580946394862],
           [70.6350207003376, 56.01251759022459, 39.58021104143517]])
-
-micAve = np.log10((10**micTN2+10**micTN1+10**micV)/3)
-
-plot(micAve[5])

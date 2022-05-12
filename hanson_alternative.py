@@ -44,10 +44,10 @@ class Propeller:
             chordCoords = np.genfromtxt(chordCoordsFile, delimiter=',', dtype=float)
             with open(r"numerical results/CP Interpolation/mSpan.csv") as spanCoordsFile:
                 spanCoords = np.genfromtxt(spanCoordsFile, delimiter=',', dtype=float)
-                with open(r"numerical results/CP Interpolation/NAVEDOWN.csv") as downPressureFile:
-                    downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)
-                    with open(r"numerical results/CP Interpolation/NAVEUP.csv") as upPressureFile:
-                        upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)
+                with open(r"numerical results/CP Interpolation/N0_Down.csv") as downPressureFile:
+                    downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)/10
+                    with open(r"numerical results/CP Interpolation/N0_Up.csv") as upPressureFile:
+                        upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)/10
                         # print(downPressures)
                         chordCoordArr2 = chordCoords[0]
                         spanCoordArr2 = spanCoords[:, 0]
@@ -107,21 +107,21 @@ class Propeller:
         return math2.integration(self.psi_D_derivative, -0.499999, 0.5, 400, [z, m], 'Simpsons')
 
     def psi_L(self, z, m):
-        # print(math2.integration(self.psi_L_derivative, -0.499999, 0.5, 200, [z, m], 'Simpsons'))
-        return math2.integration(self.psi_L_derivative, -0.499999, 0.5, 200, [z, m], 'Simpsons')
+        # print(math2.integration(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons'))
+        return math2.integration(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons')
 
     def psi_V(self, z, m):
-        return math2.integration(self.psi_V_derivative, -0.499999, 0.5, 200, [z, m], 'Simpsons')
+        return math2.integration(self.psi_V_derivative, -0.499999, 0.5, 100, [z, m], 'Simpsons')
 
     # method 2
     def psi_D2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_D_derivative, -0.499999, 0.5, 200, [z, m])
+        return math2.integrateRiemannSums(self.psi_D_derivative, -0.499999, 0.5, 100, [z, m])
 
     def psi_L2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_L_derivative, -0.499999, 0.5, 200, [z, m])
+        return math2.integrateRiemannSums(self.psi_L_derivative, -0.499999, 0.5, 100, [z, m])
 
     def psi_V2(self, z, m):
-        return math2.integrateRiemannSums(self.psi_V_derivative, -0.499999, 0.5, 200, [z, m])
+        return math2.integrateRiemannSums(self.psi_V_derivative, -0.499999, 0.5, 100, [z, m])
 
     # Derivative of psi's 🐙🐙🐙🐙🐙🐙
     def psi_D_derivative(self, x, args):
@@ -147,13 +147,13 @@ class Propeller:
     # p(t)🐙🐙🐙🐙🐙🐙🐙
     def pressure(self, m):
         k = self.calcFirstPart(m)
-        # p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 200, m)
-        # p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 200, m)
-        # p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 200, m)
+        # p_Vm = k * math2.integrateRiemannSums(self.p_Vm_derivative, 0, 1, 100, m)
+        # p_Dm = k * math2.integrateRiemannSums(self.p_Dm_derivative, 0, 1, 100, m)
+        # p_Lm = k * math2.integrateRiemannSums(self.p_Lm_derivative, 0, 1, 100, m)
 
-        p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0.2267, 1, 200, m, 'Simpsons')
-        p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0.2267, 1, 200, m, 'Simpsons')
-        p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0.2267, 1, 200, m, 'Simpsons')
+        p_Vm2 = k * math2.integration(self.p_Vm_derivative, 0.2267, 1, 100, m, 'Simpsons')
+        p_Dm2 = k * math2.integration(self.p_Dm_derivative, 0.2267, 1, 100, m, 'Simpsons')
+        p_Lm2 = k * math2.integration(self.p_Lm_derivative, 0.2267, 1, 100, m, 'Simpsons')
         print(p_Vm2, p_Lm2, p_Dm2)
         # p_mb = p_Vm + p_Dm + p_Lm
         p_mb2 = p_Vm2 + p_Dm2 + p_Lm2
@@ -161,9 +161,9 @@ class Propeller:
 
     # harmonic noise level
     def noise(self, m):
-        p = self.pressure(m)
-        # p = abs(self.pressure(m))
-        p = p * np.conj(p)
+        #p = self.pressure(m)
+        p = (abs(self.pressure(m)))/(np.sqrt(2))
+        #p = p * np.conj(p)
         p_ref = 20 * 10 ** -6
         # print((p**2) / (p_ref**2))
         # print(np.abs(p))
@@ -311,13 +311,13 @@ class Propeller:
         return dD
 
     def areaDrag(self, z):  # MAJOR PROBLEM HERE
-        area = math2.integration(self.dragDist, -0.49999, 0.5, 200, z, 'Simpsons')
+        area = math2.integration(self.dragDist, -0.49999, 0.5, 100, z, 'Simpsons')
        # area2 = math2.integration(self.dragDist, -0.49999, 0.5, 400, z, 'Simpsons')
        # print(str(area) + " " + str(area2) + " " + str(z) + " " + str(area / area2))
         return area
 
     def normalisedDragDist(self, x, z):
-        # area = math2.integration(self.dragDist, -0.5, 0.5, 200, z, 'Simpsons')
+        # area = math2.integration(self.dragDist, -0.5, 0.5, 100, z, 'Simpsons')
         return self.dragDist(x, z) / self.dragArea
 
 
@@ -401,7 +401,7 @@ flow = Flow(1.225, 8, 343)
 
 results = []
 # yArr = []
-i=5
+i = 0
 propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
 print('Microphone ' + str(i + 1))
 noise = []
@@ -415,5 +415,5 @@ for j in range(1, 4):
 
 import graphs
 
-graphs.plot(noise)
+graphs.plot(noise,24)
 
