@@ -45,9 +45,9 @@ class Propeller:
             with open(r"numerical results/CP Interpolation/mSpan.csv") as spanCoordsFile:
                 spanCoords = np.genfromtxt(spanCoordsFile, delimiter=',', dtype=float)
                 with open(r"numerical results/CP Interpolation/N0_Down.csv") as downPressureFile:
-                    downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)/10
+                    downPressures = np.genfromtxt(downPressureFile, delimiter=',', dtype=float)
                     with open(r"numerical results/CP Interpolation/N0_Up.csv") as upPressureFile:
-                        upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)/10
+                        upPressures = np.genfromtxt(upPressureFile, delimiter=',', dtype=float)
                         # print(downPressures)
                         chordCoordArr2 = chordCoords[0]
                         spanCoordArr2 = spanCoords[:, 0]
@@ -167,7 +167,7 @@ class Propeller:
         p_ref = 20 * 10 ** -6
         # print((p**2) / (p_ref**2))
         # print(np.abs(p))
-        OASPL = 10 * np.log10((p) / (p_ref) ** 2)
+        OASPL = 20 * np.log10((p) / (p_ref))
         return np.abs(OASPL)
 
     def p_Vm_derivative(self, z, m):
@@ -401,7 +401,7 @@ flow = Flow(1.225, 8, 343)
 
 results = []
 # yArr = []
-i = 0
+i = 4
 propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
 print('Microphone ' + str(i + 1))
 noise = []
@@ -415,5 +415,5 @@ for j in range(1, 4):
 
 import graphs
 
-graphs.plot(noise,24)
+graphs.plot(noise)
 
