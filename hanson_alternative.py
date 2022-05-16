@@ -401,19 +401,33 @@ flow = Flow(1.225, 8, 343)
 
 results = []
 # yArr = []
-i = 4
-propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
-print('Microphone ' + str(i + 1))
-noise = []
-for j in range(1, 4):
-    x = j
-    print('Harmonic ' + str(x))
-    # pressure = propeller.pressure(x)
-    y = propeller.noise(x)
-    print(str(y) + " dB")
-    noise.append(y)
+# i = 4
+# propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
+# print('Microphone ' + str(i + 1))
+# noise = []
+# for j in range(1, 4):
+#     x = j
+#     print('Harmonic ' + str(x))
+#     # pressure = propeller.pressure(x)
+#     y = propeller.noise(x)
+#     print(str(y) + " dB")
+#     noise.append(y)
+#
+# import graphs
+#
+# graphs.plot(noise)
 
-import graphs
-
-graphs.plot(noise)
+for i, j in enumerate(miccoord):
+    propeller = Propeller(flow, 8000, 2, 0.3, miccoord[i][0], miccoord[i][1], miccoord[i][2])
+    print('Microphone ' + str(i + 1))
+    noise = []
+    for j in range(1, 4):
+        x = j
+        print('Harmonic ' + str(x))
+        # pressure = propeller.pressure(x)
+        y = propeller.noise(x)
+        print(str(y) + " dB")
+        noise.append(y)
+    results.append(noise)
+print(results)
 
